@@ -55,10 +55,72 @@ export default function XtravaganzaPreview() {
     setIsPlaying(!isPlaying);
   };
 
-  // Fonctions d'ouverture des liens
-  const openLink = (url) => {
+  // ==================== META PIXEL TRACKING ====================
+  // Fonction pour tracker les événements Meta Pixel
+  const trackEvent = (eventName, params = {}) => {
+    if (typeof window.fbq !== 'undefined') {
+      window.fbq('track', eventName, params);
+      console.log(`✅ Meta Pixel - ${eventName}:`, params);
+    } else {
+      console.warn('⚠️ Meta Pixel non chargé');
+    }
+  };
+
+  // Fonction d'ouverture des liens avec tracking
+  const openLink = (url, eventName = null, eventParams = {}) => {
+    // Tracker l'événement si spécifié
+    if (eventName) {
+      trackEvent(eventName, eventParams);
+    }
+    
+    // Ouvrir le lien
     window.open(url, '_blank', 'noopener,noreferrer');
   };
+
+  // Trackers spécifiques pour les différentes actions
+  const handleTicketClick = (ticketType, url) => {
+    trackEvent('AddToCart', {
+      content_name: ticketType,
+      content_category: 'Billetterie',
+      currency: 'MAD',
+      value: 250
+    });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleQuizClick = (url) => {
+    trackEvent('Lead', {
+      content_name: 'Quiz XTRAVAGANZA',
+      content_category: 'Quiz',
+      content_type: 'tribe_discovery'
+    });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleSocialClick = (platform, url) => {
+    trackEvent('Contact', {
+      content_name: platform,
+      content_category: 'Social Media'
+    });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleLineupClick = (url) => {
+    trackEvent('ViewContent', {
+      content_name: 'Line-up & Programme',
+      content_category: 'Programmation'
+    });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleExperiencesClick = (url) => {
+    trackEvent('ViewContent', {
+      content_name: 'Nos Expériences',
+      content_category: 'Expériences'
+    });
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+  // ==================== FIN META PIXEL ====================
 
   // Calcul des couleurs dynamiques pour les effets de lumière
   const getLightColor = (offset) => {
@@ -197,17 +259,17 @@ export default function XtravaganzaPreview() {
             </div>
           </div>
 
-          {/* Socials Row */}
+          {/* Socials Row - AVEC TRACKING */}
           <div className="flex justify-center gap-5 mb-6 px-4">
              <div 
-               onClick={() => openLink('https://www.instagram.com/xtravaganza.festival?igsh=dGE4a3pvNXUxOXNs')}
+               onClick={() => handleSocialClick('Instagram', 'https://www.instagram.com/xtravaganza.festival?igsh=dGE4a3pvNXUxOXNs')}
                className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-purple-500 transition-all hover:scale-110 cursor-pointer shadow-lg hover:shadow-purple-500/50"
              >
                <Instagram size={18} className="text-white" />
              </div>
              
              <div 
-               onClick={() => openLink('https://www.tiktok.com/@xtravaganza2026?_r=1&_t=ZS-95EVNripO7x')}
+               onClick={() => handleSocialClick('TikTok', 'https://www.tiktok.com/@xtravaganza2026?_r=1&_t=ZS-95EVNripO7x')}
                className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-purple-500 transition-all hover:scale-110 cursor-pointer shadow-lg hover:shadow-purple-500/50"
              >
                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -216,7 +278,7 @@ export default function XtravaganzaPreview() {
              </div>
              
              <div 
-               onClick={() => openLink('https://www.threads.com/@xtravaganza.festival?xmt=AQF0QgyMURx4Zqq4BWhXGILpj3nZ6_rDXzhvnGU1Qdw0wCc')}
+               onClick={() => handleSocialClick('Threads', 'https://www.threads.com/@xtravaganza.festival?xmt=AQF0QgyMURx4Zqq4BWhXGILpj3nZ6_rDXzhvnGU1Qdw0wCc')}
                className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-purple-500 transition-all hover:scale-110 cursor-pointer shadow-lg hover:shadow-purple-500/50"
              >
                <img 
@@ -230,36 +292,36 @@ export default function XtravaganzaPreview() {
           {/* Main Content */}
           <div className="w-full px-5 flex flex-col gap-3 pb-6">
              
-             {/* BILLETTERIE & HÉBERGEMENTS */}
+             {/* BILLETTERIE & HÉBERGEMENTS - AVEC TRACKING AddToCart */}
              <div className="w-full p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:border-purple-500/50 transition-all">
                 <div className="flex items-center gap-2 mb-2 text-purple-400 font-black uppercase text-[10px] tracking-widest">
                    🎟️ ACHETEZ VOS TICKETS & HÉBERGEMENTS
                 </div>
                 <div className="flex flex-col gap-1.5">
                    <div 
-                     onClick={() => openLink('https://buy.tidar.ma/event/xtravaganza')}
+                     onClick={() => handleTicketClick('Tidar.ma', 'https://buy.tidar.ma/event/xtravaganza')}
                      className="w-full py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between cursor-pointer group"
                    >
                       <span className="font-medium text-xs">Disponible sur Tidar.ma</span>
                       <ExternalLink size={12} className="text-gray-500 group-hover:text-purple-400" />
                    </div>
                    <div 
-                     onClick={() => openLink('https://www.ticket.ma/ticket/xtravaganza?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZnRzaAQ8txJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAadUcnKwuuA0nE0ZzGGQyPs6fpmUS7F9TBDeW1fumBsgPyvl77ZdacXcXkXmsQ_aem_BPWr9W6zHwEyY1c8O4tJLA')}
+                     onClick={() => handleTicketClick('Ticket.ma', 'https://www.ticket.ma/ticket/xtravaganza?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZnRzaAQ8txJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAadUcnKwuuA0nE0ZzGGQyPs6fpmUS7F9TBDeW1fumBsgPyvl77ZdacXcXkXmsQ_aem_BPWr9W6zHwEyY1c8O4tJLA')}
                      className="w-full py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between cursor-pointer group"
                    >
                       <span className="font-medium text-xs">Disponible sur Ticket.ma</span>
                       <ExternalLink size={12} className="text-gray-500 group-hover:text-purple-400" />
                    </div>
                    <div 
-                     onClick={() => openLink('https://shotgun.live/fr/venues/xtravaganza?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZnRzaAQ8tyJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAafMYzfp38SL5jy4wx9mrD5lbNL6efnPe9sRaVZPNCfiAGh-4x33kV6coNKWcg_aem_vlZqtzXnI9eAeGNLbDaJ5g')}
+                     onClick={() => handleTicketClick('Shotgun.live', 'https://shotgun.live/fr/venues/xtravaganza?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZnRzaAQ8tyJleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA8xMjQwMjQ1NzQyODc0MTQAAafMYzfp38SL5jy4wx9mrD5lbNL6efnPe9sRaVZPNCfiAGh-4x33kV6coNKWcg_aem_vlZqtzXnI9eAeGNLbDaJ5g')}
                      className="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 flex items-center justify-between cursor-pointer"
                    >
                       <span className="font-bold text-xs text-white">Disponible sur Shotgun.live</span>
                       <ExternalLink size={12} className="text-white" />
                    </div>
-                   {/* Drapeau européen - Utilisation de l'image eu-flag.png */}
+                   {/* Drapeau européen */}
                    <div 
-                     onClick={() => openLink('https://www.eventbrite.es/e/xtravaganza-tickets-1980773139782?aff=ebdssbdestsearch')}
+                     onClick={() => handleTicketClick('Eventbrite.es', 'https://www.eventbrite.es/e/xtravaganza-tickets-1980773139782?aff=ebdssbdestsearch')}
                      className="w-full py-2 px-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between cursor-pointer group"
                    >
                       <span className="font-medium text-xs flex items-center gap-1.5">
@@ -273,9 +335,9 @@ export default function XtravaganzaPreview() {
                 </div>
              </div>
 
-             {/* QUIZ DE TRIBU */}
+             {/* QUIZ DE TRIBU - AVEC TRACKING Lead */}
              <div 
-               onClick={() => openLink('https://nebula-purr-61662056.figma.site/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnJLtGm6sYDLqrG8A6rNx9G-UqSH07I2tHYjd8HsInQqn4D-rkfeyA8x8US3U_aem_b7-2J5mnWJ3Mu87GH_Q5EA')}
+               onClick={() => handleQuizClick('https://quizz.xtravaganza-festival.com/')}
                className="w-full p-3 rounded-xl bg-white/5 backdrop-blur-md border border-purple-500/30 cursor-pointer hover:scale-[1.02] transition-all hover:shadow-lg hover:shadow-purple-500/30"
              >
                 <div className="flex items-center justify-between">
@@ -290,9 +352,9 @@ export default function XtravaganzaPreview() {
                 </div>
              </div>
 
-             {/* LINE-UP & PROGRAMME */}
+             {/* LINE-UP & PROGRAMME - AVEC TRACKING ViewContent */}
              <div 
-               onClick={() => openLink('https://www.instagram.com/p/DWo9XXkDu1e/?igsh=dnVjYXU3MTdnd20w')}
+               onClick={() => handleLineupClick('https://www.instagram.com/p/DWo9XXkDu1e/?igsh=dnVjYXU3MTdnd20w')}
                className="w-full p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 cursor-pointer hover:bg-white/10 transition-all"
              >
                 <div className="flex items-center justify-between">
@@ -307,9 +369,9 @@ export default function XtravaganzaPreview() {
                 </div>
              </div>
 
-             {/* NOS EXPÉRIENCES - LIEN INSTAGRAM AJOUTÉ */}
+             {/* NOS EXPÉRIENCES - AVEC TRACKING ViewContent */}
              <div 
-               onClick={() => openLink('https://www.instagram.com/p/DVwaNw_jiZA/?igsh=am5lYjhjMXQ4aWUz')}
+               onClick={() => handleExperiencesClick('https://www.instagram.com/p/DVwaNw_jiZA/?igsh=am5lYjhjMXQ4aWUz')}
                className="w-full p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 cursor-pointer hover:bg-white/10 transition-all group"
              >
                 <div className="flex items-center justify-between">
