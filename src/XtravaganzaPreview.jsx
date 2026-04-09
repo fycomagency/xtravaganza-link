@@ -238,12 +238,12 @@ export default function XtravaganzaPreview() {
             {/* CADRE DATE & LIEU - TEXTE 5 & 6 JUIN 2026 EN BLANC */}
             <div className="inline-flex flex-col gap-2 bg-black/50 backdrop-blur-md border border-white/20 rounded-xl p-3 shadow-xl mt-9 w-full">
               <div className="flex items-center justify-center gap-2 text-sm font-semibold text-white tracking-wide">
-                <span>5 & 6 JUIN 2026</span>
+                <span>  À Radisson Blu Taghazout Bay</span>
               </div>
               <div className="h-px w-full bg-white/20"></div>
               <div className="flex flex-col items-center text-xs text-gray-200">
                 <span className="font-bold flex items-center gap-1.5 text-[13px]">
-                  <span></span> Radisson Blu Taghazout Bay  <span></span>
+                  <span></span>  <span>Le 5 & 6 JUIN 2026</span>
                 </span>
                 <span className="text-[10px] text-pink-200 mt-1 tracking-wider uppercase font-bold">
                  
